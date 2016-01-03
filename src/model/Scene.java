@@ -21,11 +21,11 @@ public class Scene
 			return new Float3( 0.0f , 0.0f , 0.0f );
 		}
 		Surface nearest_surface = null;
-		float nearest_dist = 8.0f;
+		float nearest_dist = 100.0f;
 		for( Surface surface : surfaces )
 		{
-			float d = ZeroFinder.find( ( x ) -> surface.getDist( ray.getPos( x ) ) , 200 , 10 ,
-					1.0e-1f , 10.0f );
+			float d = ZeroFinder.find( ( x ) -> surface.getDist( ray.getPos( x ) ) , 2000 , 10 ,
+					1.0e-1f , nearest_dist );
 			if( d > 0.0f && d < nearest_dist )
 			{
 				nearest_dist = d;
@@ -38,19 +38,21 @@ public class Scene
 			/*return getColor( new Ray( col.pos , VectorFactory.reflect( ray.dir , col.norm , 0.5f ) )
 			, max_depth , cur_depth + 1 );*/
 			//Float3 spec = VectorFactory.reflect( ray.dir , col.norm , 0.0f );
-			Float3 spec = VectorFactory.reflect( ray.dir , col.norm , col.mat.roughness );
+			Material mat = nearest_surface.getMat( col.pos );
+			Float3 spec = VectorFactory.reflect( ray.dir , col.norm , mat.roughness );
 			Float3 diff = VectorFactory.reflect( ray.dir , col.norm , 1.0f );
 			float k = 1.0f + ray.dir.dot( col.norm );
-			float fresnel = ( float )Math.pow( k , col.mat.fresnel );
+			float fresnel = ( float )Math.pow( k , 2.0 ) * mat.fresnel + ( 1.0f - mat.fresnel );
+			
 			Float3 cap_spec = getColor( new Ray( col.pos , spec ) , max_depth , cur_depth + 1 ).mul( fresnel );
-			Float3 cap_diff = nearest_surface.getMat().color.componentMul(
+			Float3 cap_diff = mat.color.componentMul(
 					getColor( new Ray( col.pos , diff ) , max_depth , cur_depth + 1 ) );
-			Float3 metal = nearest_surface.getMat().color.componentMul(
+			Float3 metal = mat.color.componentMul(
 					getColor( new Ray( col.pos , spec ) , max_depth , cur_depth + 1 ) );
-			return cap_spec;/*VectorFactory.lerp(
-						VectorFactory.lerp( cap_diff , cap_spec , col.mat.specular )
+			return mat.emission_color.add( VectorFactory.lerp(
+						VectorFactory.lerp( cap_diff , cap_spec , mat.specular )
 						, metal
-					, col.mat.metalnes );*/
+					, mat.metalnes ) );
 		} else
 		{
 			return new Float3( 0.4f , 0.02f , 0.05f ).mul( 0.6f - 0.4f * Math.abs( ray.dir.z ) )

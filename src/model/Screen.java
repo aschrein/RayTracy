@@ -18,8 +18,8 @@ public class Screen
 {
 	private final Float4[] image;
 	private final int width, height;
-	Graphics2D ig2;
-	BufferedImage bi;
+	private final Graphics2D ig2;
+	private final BufferedImage bi;
 	public Screen( int w , int h )
 	{
 		image = new Float4[ w * h ];
@@ -51,7 +51,19 @@ public class Screen
 	}
 	public void draw( Graphics2D g , int w , int h )
 	{
-		g.drawImage( bi , new AffineTransform( ( float )w / width , 0.0f , 0.0f , ( float )h / height , 0.0f , 0.0f ) , null );
+		for( int x = 0; x < width; x++ )
+		{
+			for( int y = 0; y < height; y++ )
+			{
+				int idx = x + y * height;
+				ig2.setPaint( new Color(
+						clamp( image[ idx ].x / image[ idx ].w ) ,
+						clamp( image[ idx ].y / image[ idx ].w ) ,
+						clamp( image[ idx ].z / image[ idx ].w ) ) );
+				ig2.fillRect( x , y , 1 , 1 );
+			}
+		}
+		g.drawImage( bi , new AffineTransform( ( float ) w / width , 0.0f , 0.0f , ( float ) h / height , 0.0f , 0.0f ) , null );
 	}
 	public static float clamp( float x )
 	{
@@ -63,11 +75,6 @@ public class Screen
 		if( idx < width * height && idx >= 0 )
 		{
 			image[ idx ].copyIn( image[ idx ].add( new Float4( c , 1.0f ) ) );
-			ig2.setPaint( new Color(
-					clamp( image[ idx ].x / image[ idx ].w ) ,
-					clamp( image[ idx ].y / image[ idx ].w ) ,
-					clamp( image[ idx ].z / image[ idx ].w ) ) );
-			ig2.fillRect( x , y , 1 , 1 );
 		}
 	}
 }

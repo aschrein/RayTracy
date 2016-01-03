@@ -10,6 +10,7 @@ import linalg.Float3;
 import linalg.Float4;
 import linalg.Mat4;
 import linalg.Ray;
+import linalg.VectorFactory;
 
 /**
  *
@@ -55,6 +56,15 @@ public class Camera
 	public Ray getRay( Float2 tx )
 	{
 		return new Ray( pos.copy() , look.add( up.mul( tx.y * itany ).add( left.mul( tx.x * itanx ) ) ).norm() );
+	}
+	public Ray getRayLens( Float2 tx , float focus_dist , float lens_size )
+	{
+		Float2 lens_random = VectorFactory.getRandomCircle().mul( lens_size );
+		Float3 pos_on_lens = up.mul( lens_random.y ).add( left.mul( lens_random.x ) );
+		Float3 v = look.mul( focus_dist )
+				.add( up.mul( tx.y * itany ).add( left.mul( tx.x * itanx ) ) )
+				.sub( pos_on_lens );
+		return new Ray( pos.add( pos_on_lens ) , v.norm() );
 	}
 	public Mat4 getMatrix()
 	{

@@ -6,5 +6,5 @@ import linalg.Ray;
 public interface Surface
 {
 	float getDist( Float3 pos );
-	Material getMat();
+	Material getMat( Float3 pos );
 }

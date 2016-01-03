@@ -1,6 +1,8 @@
-import static org.junit.Assert.*;
-import implementation.Body3D;
-import implementation.Sphere;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 import linalg.Float3;
 import linalg.Ray;
 import linalg.VectorFactory;
@@ -8,10 +10,42 @@ import model.Collision;
 import model.Material;
 import model.Surface;
 import model.ZeroFinder;
-public class Test
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+/**
+ *
+ * @author anton
+ */
+public class test
 {
-	@org.junit.Test
-	public void test()
+	public test()
+	{
+	}
+	@BeforeClass
+	public static void setUpClass()
+	{
+	}
+	@AfterClass
+	public static void tearDownClass()
+	{
+	}
+	@Before
+	public void setUp()
+	{
+	}
+	@After
+	public void tearDown()
+	{
+	}
+	// TODO add test methods here.
+	// The methods must be annotated with annotation @Test. For example:
+	//
+	@Test
+	public void hello()
 	{
 		Surface surface = new Surface()
 		{
@@ -23,7 +57,7 @@ public class Test
 						+ r.xy().mod();
 			}
 			@Override
-			public Material getMat()
+			public Material getMat( Float3 r )
 			{
 				return null;
 			}
@@ -59,5 +93,10 @@ public class Test
 		System.out.println( "avg time:" + ( double )( System.currentTimeMillis() - t1 ) / c * 1.0e3 + "us" );
 		//0.0076527738571166995
 		System.out.println( "avg err:" + err / N );
+		
+		float d = ZeroFinder.find( ( x ) -> ( float )( Math.sin( x ) * Math.exp( x * 0.5f + 1.0 ) ) , 200 , 10 ,
+				1.0e-3f , 5.0f );
+		System.out.println( d );
+		assertTrue( Math.abs( d - Math.PI ) < 1.0e-3f );
 	}
 }

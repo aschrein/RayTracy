@@ -44,7 +44,7 @@ public class ZeroFinder
 		{
 			return -1.0f;
 		}
-		/*float dr = 1.0e-5f;
+		float dr = 1.0e-5f;
 		float der0 = ( func.get( nx0 + dr ) - func.get( nx0 - dr ) )
 				/ ( 2.0f * dr );
 		float der1 = ( func.get( nx1 + dr ) - func.get( nx1 - dr ) )
@@ -62,12 +62,12 @@ public class ZeroFinder
 		} else if( b * der1 > 1.0e-4f )
 		{
 			d1 = b / der1;
-			float x = nx0 + d0;
+			float x = nx1 - d1;
 			if( Math.abs( func.get( x ) ) < EPS )
 			{
 				return x;
 			}
-		}*/
+		}
 		return findZero( func , nx0 , nx1 , max_samples , cur_sample + 1 );
 	}
 	public static float find( Func1D func , int march_count ,
