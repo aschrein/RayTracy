@@ -24,8 +24,7 @@ public class Scene
 		float nearest_dist = 100.0f;
 		for( Surface surface : surfaces )
 		{
-			float d = ZeroFinder.find( ( x ) -> surface.getDist( ray.getPos( x ) ) , 2000 , 10 ,
-					1.0e-1f , nearest_dist );
+			float d = ZeroFinder.find( ( x ) -> surface.getDist( ray.getPos( x ) ) );
 			if( d > 0.0f && d < nearest_dist )
 			{
 				nearest_dist = d;

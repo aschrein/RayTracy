@@ -75,7 +75,7 @@ public class RayTracy
 											@Override
 											public float getDist( Float3 pos )
 											{
-												return pos.sub( new Float3( 0.0f , 0.0f , 0.0f ) ).mod() - 3.5f;
+												return pos.sub( new Float3( 0.0f , 0.0f , 0.0f ) ).mod() - 2.8f;
 											}
 											@Override
 											public Material getMat( Float3 r )
@@ -91,24 +91,25 @@ public class RayTracy
 											@Override
 											public float getDist( Float3 r )
 											{
+												double angle = Math.atan2( r.y , r.x );
 												return r.sub( new Float3( 0.0f , 0.0f , -2.0f ) ).mod()
-												- 2.0f;
+												- 2.0f * ( 0.8f + 0.2f * ( float )Math.cos( 5.0f * angle ) );
 											}
 											@Override
 											public Material getMat( Float3 r )
 											{
-												mat.emission_color.x = 1.14f;
+												mat.emission_color.x = 0.14f;
 												mat.emission_color.y = 0.234f;
-												mat.emission_color.z = 0.09f;
+												mat.emission_color.z = 0.49f;
 												mat.color.y = 0.23f;
 												mat.color.z = 0.1f;
-												mat.roughness = 0.2f;
+												mat.roughness = 0.9f;
 												mat.fresnel = 0.8f;
 												mat.specular = 0.7f;
 												mat.metalnes = 0.0f;
 												return mat;
 											}
-										} , 0.5f
+										} , 0.7f
 						) , new Surface()
 						{
 							Material mat = new Material();
@@ -122,19 +123,20 @@ public class RayTracy
 							@Override
 							public Material getMat( Float3 r )
 							{
-								mat.emission_color.x = 0.014f;
-								mat.emission_color.y = 0.0934f;
-								mat.emission_color.z = 0.19f;
+								mat.emission_color.x = 0.0f;
+								mat.emission_color.y = 0.1934f;
+								mat.emission_color.z = 0.09f;
 								mat.color.x = 0.6f;
 								mat.color.y = 0.8f;
-								mat.color.z = 0.94f;
-								mat.fresnel = 0.9f;
+								mat.color.z = 0.784f;
+								mat.fresnel = 0.99f;
 								mat.roughness = 0.2f;
 								mat.metalnes = 0.0f;
-								mat.specular = 0.7f;
+								mat.specular = 0.8f;
 								return mat;
 							}
-						} , 0.2f )
+						}
+ , 0.5f )
 		);
 		final JFrame main_form = new JFrame();
 		//column index list for use in stream api
@@ -164,7 +166,7 @@ public class RayTracy
 							{
 								float v = -( ( float ) y + 0.5f * ( float ) Math.random() - 0.5f )
 										/ screen.getHeight() * 2.0f + 1.0f;
-								Ray camera_ray = camera.getRayLens( new Float2( u , v ) , 10.3f , 0.5f );
+								Ray camera_ray = camera.getRayLens( new Float2( u , v ) , 10.3f , 0.2f );
 								//N - max_depth
 								Float3 color = scene.getColor( camera_ray , 4 );
 								screen.set( color , ix , y );
